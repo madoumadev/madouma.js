@@ -575,83 +575,51 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 
 },{}],"8lqZg":[function(require,module,exports) {
 var _model = require("./model");
-var _template = require("./template");
 var _mainCss = require("./styles/main.css");
-const $site = document.querySelector("#site");
-(0, _model.model).forEach((block)=>{
-    const toHtml = (0, _template.templates)[block.type];
-    if (toHtml) $site.insertAdjacentHTML("beforeend", toHtml(block));
-});
+var _site = require("./classes/site");
+var _sidebar = require("./classes/sidebar");
+const site = new (0, _site.Site)("#site");
+const sidebar = new (0, _sidebar.Sidebar)("#panel");
+site.render((0, _model.model));
 
-},{"./model":"dEDha","./template":"iBEJI","./styles/main.css":"clPKd"}],"dEDha":[function(require,module,exports) {
+},{"./model":"dEDha","./styles/main.css":"clPKd","./classes/site":"24VTm","./classes/sidebar":"5YCBk"}],"dEDha":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "model", ()=>model);
 var _mePng = require("./assets/me.png");
 var _mePngDefault = parcelHelpers.interopDefault(_mePng);
+var _blocks = require("./classes/blocks");
 const model = [
-    {
-        type: "title",
-        value: "Website constructor using Vanilla Js",
-        options: {
-            tag: "h2",
-            styles: {
-                background: "linear-gradient(to right, #ff0099, #493240)",
-                color: "#fff",
-                padding: " 1.5rem",
-                "text-align": "center"
-            }
+    new (0, _blocks.TitleBlock)("Website constructor using Vanilla Js", {
+        tag: "h2",
+        styles: {
+            background: "linear-gradient(to right, #ff0099, #493240)",
+            color: "#fff",
+            padding: " 1.5rem",
+            "text-align": "center"
         }
-    },
-    {
-        type: "text",
-        value: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, unde"
-    },
-    {
-        type: "columns",
-        value: [
-            "564565656",
-            "dgfgdfgdfgdf",
-            "27787"
-        ]
-    },
-    {
-        type: "image",
-        value: (0, _mePngDefault.default)
-    }
+    }),
+    new (0, _blocks.TextBlock)("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, unde"),
+    new (0, _blocks.ColumnsBlock)([
+        "564565656",
+        "dgfgdfgdfgdf",
+        "27787"
+    ]),
+    new (0, _blocks.ImageBlock)((0, _mePngDefault.default), {
+        styles: {
+            padding: "2rem 0",
+            display: "flex",
+            "justify-content": "center"
+        },
+        imageStyles: {
+            width: "350px",
+            height: "300px"
+        },
+        alt: "Me"
+    })
 ];
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./assets/me.png":"buPKE"}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"buPKE":[function(require,module,exports) {
+},{"./assets/me.png":"buPKE","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./classes/blocks":"gMfMj"}],"buPKE":[function(require,module,exports) {
 module.exports = require("4788b921b1741237").getBundleURL("bLxZJ") + "me.e69bb117.png" + "?" + Date.now();
 
 },{"4788b921b1741237":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -689,37 +657,90 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"iBEJI":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "templates", ()=>templates);
-var _utils = require("./utils");
-function image(block) {
-    return (0, _utils.row)(` <img src="${block.value}" alt=""/>`);
-}
-function title(block) {
-    const { tag = "h1", styles } = block.options;
-    return (0, _utils.row)((0, _utils.row)(`<${tag} class="text-2xl">${block.value}</${tag}>`), (0, _utils.toCss)(styles));
-}
-function text(block) {
-    return `<div class="">
-                <div>
-                    <p class="">${block.value}</p>
-                </div>
-            </div>`;
-}
-function columns(block) {
-    const html = block.value.map((0, _utils.row)).join("");
-    return (0, _utils.col)(html);
-}
-const templates = {
-    title,
-    text,
-    columns,
-    image
+},{}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./utils":"en4he"}],"en4he":[function(require,module,exports) {
+},{}],"gMfMj":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "TitleBlock", ()=>TitleBlock);
+parcelHelpers.export(exports, "ImageBlock", ()=>ImageBlock);
+parcelHelpers.export(exports, "ColumnsBlock", ()=>ColumnsBlock);
+parcelHelpers.export(exports, "TextBlock", ()=>TextBlock);
+var _utils = require("../utils");
+class Block {
+    constructor(value, options){
+        this.value = value;
+        this.options = options;
+    }
+    toHTML() {
+        throw new Error("You should implement toHTML method");
+    }
+}
+class TitleBlock extends Block {
+    constructor(value, options){
+        super(value, options);
+    }
+    toHTML() {
+        const { tag = "h1", styles } = this.options;
+        return (0, _utils.row)((0, _utils.row)(`<${tag} class="text-2xl">${this.value}</${tag}>`), (0, _utils.toCss)(styles));
+    }
+}
+class ImageBlock extends Block {
+    constructor(value, options){
+        super(value, options);
+    }
+    toHTML() {
+        const { imageStyles: is, styles, alt } = this.options;
+        return (0, _utils.row)(` <img src="${this.value}" style="${(0, _utils.toCss)(is)}" alt="${alt}"/>`, (0, _utils.toCss)(this.options.styles));
+    }
+}
+class ColumnsBlock extends Block {
+    constructor(value, options){
+        super(value, options);
+    }
+    toHTML() {
+        const html = this.value.map((0, _utils.row)).join("");
+        return (0, _utils.col)(html);
+    }
+}
+class TextBlock extends Block {
+    constructor(value, options){
+        super(value, options);
+    }
+    toHTML() {
+        return (0, _utils.row)((0, _utils.row)(`<p class="">${this.value}</p>`));
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../utils":"en4he"}],"en4he":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "row", ()=>row);
@@ -736,6 +757,57 @@ function toCss(styles = {}) {
     return Object.keys(styles).map(toString).join(";");
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"clPKd":[function() {},{}]},["igKGj","8lqZg"], "8lqZg", "parcelRequire68b9")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"clPKd":[function() {},{}],"24VTm":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Site", ()=>Site);
+class Site {
+    constructor(selector){
+        this.$el = document.querySelector(selector);
+    }
+    render(model) {
+        model.forEach((block)=>{
+            this.$el.insertAdjacentHTML("beforeend", block.toHTML());
+        });
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5YCBk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Sidebar", ()=>Sidebar);
+parcelHelpers.export(exports, "block", ()=>block);
+class Sidebar {
+    constructor(selector){
+        this.$el = document.querySelector(selector);
+        this.init();
+    }
+    init() {
+        this.$el.insertAdjacentHTML("afterbegin", this.template);
+    }
+    get template() {
+        return [
+            block("text"),
+            block("title")
+        ].join("");
+    }
+}
+function block(type) {
+    return `
+        <form class="bg-gray-100 p-3 m-2">
+            <h5 class="capitalize">${type}</h5>
+            <div class="mb-1">
+                <input name="value"  class="border p-2" placeholder="value">
+            </div>
+             <div class="">
+                <input name="styles" class="border p-2" placeholder="styles">
+            </div>
+            <button type="submit" class="my-3 bg-gray-700 text-white rounded-md px-3 py-2 hover:bg-gray-900">Add</button>
+        </form>
+        <hr/>
+    `;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["igKGj","8lqZg"], "8lqZg", "parcelRequire68b9")
 
 //# sourceMappingURL=index.975ef6c8.js.map

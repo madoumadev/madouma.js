@@ -1,7 +1,8 @@
 import {row, col, toCss} from "./utils";
 
 function image(block){
-    return  row(` <img src="${block.value}" alt=""/>`)
+    const {imageStyles: is, styles, alt} = block.options
+    return  row(` <img src="${block.value}" style="${toCss(is)}" alt="${alt}"/>`, toCss(block.options.styles))
 }
  function title(block) {
     const {tag = 'h1', styles} = block.options
