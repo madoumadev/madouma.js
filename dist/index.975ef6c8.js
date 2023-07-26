@@ -576,13 +576,10 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"8lqZg":[function(require,module,exports) {
 var _model = require("./model");
 var _mainCss = require("./styles/main.css");
-var _site = require("./classes/site");
-var _sidebar = require("./classes/sidebar");
-const site = new (0, _site.Site)("#site");
-const sidebar = new (0, _sidebar.Sidebar)("#panel");
-site.render((0, _model.model));
+var _app = require("./classes/app");
+new (0, _app.App)((0, _model.model)).init();
 
-},{"./model":"dEDha","./styles/main.css":"clPKd","./classes/site":"24VTm","./classes/sidebar":"5YCBk"}],"dEDha":[function(require,module,exports) {
+},{"./model":"dEDha","./styles/main.css":"clPKd","./classes/app":"g9LQJ"}],"dEDha":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "model", ()=>model);
@@ -619,7 +616,7 @@ const model = [
     })
 ];
 
-},{"./assets/me.png":"buPKE","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./classes/blocks":"gMfMj"}],"buPKE":[function(require,module,exports) {
+},{"./assets/me.png":"buPKE","./classes/blocks":"gMfMj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"buPKE":[function(require,module,exports) {
 module.exports = require("4788b921b1741237").getBundleURL("bLxZJ") + "me.e69bb117.png" + "?" + Date.now();
 
 },{"4788b921b1741237":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -656,36 +653,6 @@ function getOrigin(url) {
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
-
-},{}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
 
 },{}],"gMfMj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -736,16 +703,17 @@ class TextBlock extends Block {
         super(value, options);
     }
     toHTML() {
-        return (0, _utils.row)((0, _utils.row)(`<p class="">${this.value}</p>`));
+        return (0, _utils.row)(`<p>${this.value}</p>`, (0, _utils.toCss)(this.options?.styles));
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../utils":"en4he"}],"en4he":[function(require,module,exports) {
+},{"../utils":"en4he","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"en4he":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "row", ()=>row);
 parcelHelpers.export(exports, "col", ()=>col);
 parcelHelpers.export(exports, "toCss", ()=>toCss);
+parcelHelpers.export(exports, "block", ()=>block);
 function row(content, styles = "") {
     return `<div style="${styles}">${content}</div>`;
 }
@@ -753,48 +721,13 @@ function col(content) {
     return `<div class="grid grid-cols-3 gap-2 mt-2">${content}</div>`;
 }
 function toCss(styles = {}) {
+    if (typeof styles === "string") return styles;
     const toString = (key)=>`${key}: ${styles[key]}`;
     return Object.keys(styles).map(toString).join(";");
 }
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"clPKd":[function() {},{}],"24VTm":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Site", ()=>Site);
-class Site {
-    constructor(selector){
-        this.$el = document.querySelector(selector);
-    }
-    render(model) {
-        model.forEach((block)=>{
-            this.$el.insertAdjacentHTML("beforeend", block.toHTML());
-        });
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5YCBk":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Sidebar", ()=>Sidebar);
-parcelHelpers.export(exports, "block", ()=>block);
-class Sidebar {
-    constructor(selector){
-        this.$el = document.querySelector(selector);
-        this.init();
-    }
-    init() {
-        this.$el.insertAdjacentHTML("afterbegin", this.template);
-    }
-    get template() {
-        return [
-            block("text"),
-            block("title")
-        ].join("");
-    }
-}
 function block(type) {
     return `
-        <form class="bg-gray-100 p-3 m-2">
+        <form name="${type}" class="bg-gray-100 p-3 m-2">
             <h5 class="capitalize">${type}</h5>
             <div class="mb-1">
                 <input name="value"  class="border p-2" placeholder="value">
@@ -808,6 +741,109 @@ function block(type) {
     `;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["igKGj","8lqZg"], "8lqZg", "parcelRequire68b9")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"clPKd":[function() {},{}],"g9LQJ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "App", ()=>App);
+var _site = require("./site");
+var _sidebar = require("./sidebar");
+class App {
+    constructor(model){
+        this.model = model;
+    }
+    init() {
+        const site = new (0, _site.Site)("#site");
+        const updateCallback = (newBlock)=>{
+            this.model.push(newBlock);
+            site.render(this.model);
+        };
+        new (0, _sidebar.Sidebar)("#panel", updateCallback);
+        site.render(this.model);
+    }
+}
+
+},{"./site":"24VTm","./sidebar":"5YCBk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"24VTm":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Site", ()=>Site);
+class Site {
+    constructor(selector){
+        this.$el = document.querySelector(selector);
+    }
+    render(model) {
+        this.$el.innerHTML = "";
+        model.forEach((block)=>{
+            this.$el.insertAdjacentHTML("beforeend", block.toHTML());
+        });
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5YCBk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Sidebar", ()=>Sidebar);
+var _utils = require("../utils");
+var _blocks = require("./blocks");
+class Sidebar {
+    constructor(selector, updateCallback){
+        this.$el = document.querySelector(selector);
+        this.update = updateCallback;
+        this.init();
+    }
+    init() {
+        this.$el.insertAdjacentHTML("afterbegin", this.template);
+        this.$el.addEventListener("submit", this.add.bind(this));
+    }
+    get template() {
+        return [
+            (0, _utils.block)("text"),
+            (0, _utils.block)("title")
+        ].join("");
+    }
+    add(event) {
+        event.preventDefault();
+        const type = event.target.name;
+        const value = event.target.value.value;
+        const styles = event.target.styles.value;
+        const newBlock = type === "text" ? new (0, _blocks.TextBlock)(value, {
+            styles
+        }) : new (0, _blocks.TitleBlock)(value, {
+            styles
+        });
+        this.update(newBlock);
+    }
+}
+
+},{"../utils":"en4he","./blocks":"gMfMj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["igKGj","8lqZg"], "8lqZg", "parcelRequire68b9")
 
 //# sourceMappingURL=index.975ef6c8.js.map

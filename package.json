@@ -2,16 +2,15 @@
   "name": "js-madoumacss",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.js",
-  "source": "src/index.html",
+  "source": "src/index.js",
   "scripts": {
-    "serve": "parcel -p 4200 --open",
-    "build": "parcel build --no-source-maps"
+    "serve": "parcel ./src/index.html -p 4200 --open",
+    "build": "parcel build ./src/index.html --no-source-maps"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["madoumacss"],
+  "author": "madoumadev",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.9.3"
+    "parcel": "^2.0.0"
   }
 }

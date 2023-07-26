@@ -47,6 +47,6 @@ export class TextBlock extends  Block {
     }
 
     toHTML() {
-        return row(row(`<p class="">${this.value}</p>`))
+        return row(`<p>${this.value}</p>`, toCss(this.options?.styles))
     }
 }
