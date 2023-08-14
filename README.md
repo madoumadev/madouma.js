@@ -1,2 +1,2 @@
 # madouma.js
-Website builder using vanilla JS
+Website builder using vanilla JS and Parcel
